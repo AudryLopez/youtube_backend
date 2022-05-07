@@ -1,15 +1,20 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { Repository } from 'typeorm';
+import { User } from './user.entity';
 
 @Injectable()
 export class UserService {
+  constructor(private readonly _userRepository: Repository<User>);
   create(createUserDto: CreateUserDto) {
     return 'This action adds a new user';
   }
 
-  findAll() {
-    return `This action returns all user`;
+  async findUsers() {
+    const result = await this._userRepository.find();
+    if (!result) throw new BadRequestException(`the is not users`);
+    return result;
   }
 
   findOne(id: number) {
